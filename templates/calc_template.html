@@ -32,8 +32,11 @@
     </div>
 
   <script>
+const valid_chars = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0, '+', '-', '/', '*', '**'];
+document.addEventListener("keydown", function(e){calcNum(e);});
+
     let eqn = "";  // Initialize the equation variable
-    const valid_chars = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0, '+', '-', '/', '*', '**'];
+    
 
     function calcNum(val) {
       if (valid_chars.includes(val)) {  // Check if the input is a valid character
