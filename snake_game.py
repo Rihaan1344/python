@@ -22,6 +22,7 @@ class Snake:
         self.head = Square(WIDTH // 2, HEIGHT // 2)
         self.squares = [self.head]
         self.direction = [0, 0]
+        self.score = 0
 
     def move_snake(self, incr_x, incr_y):
         # Move the head first
@@ -66,6 +67,8 @@ class Snake:
         elif self.direction == [0, -VELOCITY]:
             new_square = Square(self.head.x, self.head.y + 50)
             self.squares.append(new_square)
+        
+        self.score += 1
 
     def collided_with_food(self, food):
         snake_rect = pygame.Rect(self.head.x, self.head.y, 50, 50)
@@ -148,7 +151,7 @@ while running:
 
     #Collision detection (if the snake collided with itselg)
     if my_snake.collided_with_self():
-        print("You Lose!")
+        print(f"You Lose! Your score was {my_snake.score}")
         running = False
 
     # Draw snake and food
