@@ -19,7 +19,7 @@ road = pygame.transform.scale(road, (WIDTH, HEIGHT))
 # Car class
 class UserCar:
     def __init__(self):
-        self.image = ALL_CARS.subsurface((20, 20, 288,  401))  # Adjust if needed
+        self.image = ALL_CARS.subsurface((20 + 248, 360 + 20, 248, 360))  # Adjust if needed
         self.image = pygame.transform.rotate(self.image, -90)  # Adjust if needed
         self.x = 401 
         self.y = HEIGHT // 2 - 248  # Center vertically

@@ -15,10 +15,12 @@ NPC_CAR_FRAMES = [
     (20 + 248, 360 + 20, 248, 360),
     (268 + 248, 360 + 20, 248, 360)
 ]
+
 # Initialize variables
 npc_cars = []
+occupied_lanes = []  # Track which lanes are occupied
 score = 0
-LANES = [300, HEIGHT // 3, HEIGHT - 300]
+LANES = [300, HEIGHT // 2, HEIGHT - 300]  # Keep original lane list
 MAX_CARS = 5  # Limit number of NPC cars
 
 # Initialize screen
@@ -36,6 +38,7 @@ pygame.time.set_timer(NEW_CAR_EVENT, 1500)  # Generate a new car every 1.5 secs
 
 SCORE_EVENT = pygame.USEREVENT + 2
 pygame.time.set_timer(SCORE_EVENT, 1000)  # Update score every 1 sec
+
 
 class UserCar:
     def __init__(self):
@@ -55,31 +58,43 @@ class UserCar:
     def draw(self):
         screen.blit(self.image, (self.x, self.y))
 
+
 class NpcCar:
     def __init__(self):
-        global LANES
+        global occupied_lanes
+
         self.image = ALL_CARS.subsurface(choice(NPC_CAR_FRAMES))
+        self.image = pygame.transform.rotate(self.image, 90)
         self.x = WIDTH - 310
-        if len(LANES) > 0:
-            self.y = choice(LANES)
-            LANES.remove(self.y)
+
+        # Select a lane that is NOT occupied
+        available_lanes = [lane for lane in LANES if lane not in occupied_lanes]
+
+        if available_lanes:
+            self.y = choice(available_lanes)
+            occupied_lanes.append(self.y)  # Mark lane as occupied
         else:
-            LANES = [300, HEIGHT // 3, HEIGHT - 300]
-            self.y = choice(LANES)
-            LANES.remove(self.y)
+            self.y = choice(LANES)  # Fallback if all lanes are occupied
+
         self.speed = 5
         npc_cars.append(self)
-        self.draw()
+
+        # 🛠 Debugging (Check where the car spawns)
+        print(f"✅ NPC Car Spawned in Lane: {self.y}")
+        print(LANES)
 
     def draw(self):
         screen.blit(self.image, (self.x, self.y))
-    
+
     def move(self, mainCar):
         self.x -= self.speed
         if self.x < -300:
             npc_cars.remove(self)
-            npc_cars.append(NpcCar())
+            if self.y in occupied_lanes:
+                occupied_lanes.remove(self.y)  # Free up the lane
+
         self.check_collision(mainCar)
+        self.draw()
 
     def check_collision(self, mainCar):
         global running
@@ -101,9 +116,8 @@ while running:
     main_car.move(keys)
     main_car.draw()
 
-    if len(npc_cars) > 0:
-        for car in npc_cars:
-            car.move(main_car)
+    for car in npc_cars:
+        car.move(main_car)
 
     for event in pygame.event.get():
 
@@ -113,10 +127,11 @@ while running:
         if event.type == SCORE_EVENT:
             score += 1
             print(f"🏆 Score: {score}")
-        
+
         if event.type == NEW_CAR_EVENT:
             if len(npc_cars) < MAX_CARS:
                 npc_cars.append(NpcCar())
 
+    pygame.display.flip()
 
 pygame.quit()
