@@ -3,14 +3,17 @@ import spotipy
 from spotipy.oauth2 import SpotifyOAuth
 import time
 import yt_dlp
-
+from dotenv import load_dotenv
+import os
 
 app = Flask(__name__)
 
-clientid = "74382212368f478a9b8cd2028a43b4e5"
-clientSecret = "a10611d0e4524e42a06869db76dafbbf"
+load_dotenv()
 
-app.secret_key = "OAHDBFiooqwbfBDEWCB"
+clientid = os.getenv("CLIENTID")
+clientSecret = os.getenv("CLIENTSECRET")
+
+app.secret_key = os.getenv("SECRETKEY")
 app.config["SESSION_COOKIE_NAME"] = "my cookie"
 
 @app.route("/")
@@ -79,4 +82,3 @@ def get_spotify_oath():
 
 if __name__ == "__main__":
     app.run(debug=True)
-
