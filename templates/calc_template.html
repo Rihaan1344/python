@@ -33,7 +33,7 @@
 
   <script>
 const valid_chars = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0, '+', '-', '/', '*', '**'];
-document.addEventListener("keydown", function(e){calcNum(e);});
+document.addEventListener("keydown", function(e){calcNum(e.key);});
 
     let eqn = "";  // Initialize the equation variable
     
@@ -50,7 +50,7 @@ document.addEventListener("keydown", function(e){calcNum(e);});
         let data = { equation: eqn };  // Prepare the data object to send in the POST request
         
         // Send the POST request to the server
-        fetch("http://127.0.0.1:5000/", {
+        fetch("/", {
     method: 'POST',
     headers: {
         'Content-Type': 'application/json'
